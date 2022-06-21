@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Real Time Polling App using Socket.io</title>
+  </head>
+  <body>
+   
+    <!-- Se importan las dependencias -->
+    <!-- https://cdnjs.com/libraries/socket.io -->
+    <!-- https://cdnjs.com/libraries/Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.1/socket.io.min.js" integrity="sha512-gVG6WRMUYFaIdoocaxbqd02p3DUbhReTBWc7NTGB96i7vONrr7GuCZJHFFmkXEhpwilIWUnfRIMSlKaApwd/jg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+
+    <!-- Título -->
+    <h1 style="text-align: center;">¿Cuál es tu género musical favorito?</h1>
+
+    <!-- Canvas -->
+    <canvas id="voteChart" style="height:50vh; width:100vw"></canvas>
+
+    <!-- Botones -->
+    <button onclick="vote(0)">Rock</button>
+    <button onclick="vote(1)">Pop</button>
+    <button onclick="vote(2)">Reggaeton</button>
+    <button onclick="vote(3)">Jazz</button>
+    <button onclick="vote(4)">Electrónica</button>
+
+    <script>
+
+      // Se inicializa el Canvas
+      const ctx = document.getElementById("voteChart").getContext("2d");
+
+      // Se inicializa el Chart
+      const chart = new Chart(ctx, {
+          type: "bar",
+          data: {
+              labels: ["options"],
+          },
+          options: {
+
+          }
+      });
+
+      // El puerto debe ser el mismo que está configurado en el servidor
+      const socket = io("localhost:9000");
+
+      // Cuando haya un nuevo voto se actualiza el chart
+      socket.on("update", (options) => {
+        // 
+        options = Object.entries(options);
+
+        for (const [key, option] of options) {
+
+          if(typeof chart.data.datasets[key] == "undefined" && chart.data.datasets.length < options.length ) {
+            chart.data.datasets.push({
+                  backgroundColor: option.color,
+                  borderColor: option.color,
+                  data: [option.votes],
+                  label: option.label
+              });
+          } else  if(typeof chart.data.datasets[key] != "undefined") {
+            chart.data.datasets[key].data = [option.votes];
+          }
+          
+
+        }
+
+        chart.update();
+      });
+
+      // Función para realizar el voto
+      function vote(index) {
+        socket.emit("vote", index);
+      }
+
+    </script>
+  </body>
+</html>
