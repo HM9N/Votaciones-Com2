@@ -12,11 +12,11 @@ const clients = [];
 
 // Se inicializan las opciones
 const options = {
-    "0": { votes: 0, label: "JavaScript", color: randomRGB() },
-    "1": { votes: 0, label: "C#", color: randomRGB() },
-    "2": { votes: 0, label: "PHP", color: randomRGB() },
-    "3": { votes: 0, label: "Python", color: randomRGB() },
-    "4": { votes: 0, label: "Go", color: randomRGB() }
+    "0": { votes: 0, label: "Rock", color: randomRGB() },
+    "1": { votes: 0, label: "Pop", color: randomRGB() },
+    "2": { votes: 0, label: "Reggaeton", color: randomRGB() },
+    "3": { votes: 0, label: "Jazz", color: randomRGB() },
+    "4": { votes: 0, label: "Electrónicac", color: randomRGB() }
 };
 
 // Conexión con el cliente
